@@ -1,0 +1,14 @@
+@mixin create-font(
+  $font-size: 14px,
+  $font-weight: normal,
+  $line-height: normal,
+  $text-transform: none,
+  $letter-space: normal,
+) {
+  font-size: $font-size;
+  font-weight: $font-weight;
+  line-height: $line-height;
+  letter-spacing: $letter-space;
+  text-transform: $text-transform;
+}
+

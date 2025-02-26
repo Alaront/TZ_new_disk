@@ -1,0 +1,33 @@
+@use '/src/assets/styles/mixins.scss' as *;
+
+@mixin h1 {
+  @include create-font(104px, 900, 104px);
+}
+
+@mixin h2 {
+  @include create-font(48px, 600, 72px);
+}
+
+@mixin h3 {
+  @include create-font(32px, 400, 48px);
+}
+
+@mixin h4 {
+  @include create-font(24px, 600, 32px);
+}
+
+@mixin text-normal {
+  @include create-font(20px, 500, 32px);
+}
+
+@mixin text-small {
+  @include create-font(18px, 400, 28px);
+}
+
+@mixin text-small-mob {
+  @include create-font(14px, 400, 24px);
+}
+
+@mixin text-small-bold {
+  @include create-font(18px, 700, 28px);
+}
