@@ -4,12 +4,20 @@
   @include create-font(104px, 900, 104px);
 }
 
+@mixin h1-mob {
+  @include create-font(60px, 900, 64px);
+}
+
 @mixin h2 {
   @include create-font(48px, 600, 72px);
 }
 
 @mixin h3 {
   @include create-font(32px, 400, 48px);
+}
+
+@mixin h3-mob {
+  @include create-font(24px, 400, 36px);
 }
 
 @mixin h4 {
