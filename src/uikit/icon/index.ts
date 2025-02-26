@@ -1,0 +1,6 @@
+export { default as IconAdd } from './icon.add.vue'
+export { default as IconClose } from './icon.close.vue'
+export { default as IconEmail } from './icon.email.vue'
+export { default as IconLogin } from './icon.login.vue'
+export { default as IconOnPassword } from './icon.on.password.vue'
+export { default as IconPassword } from './icon.password.vue'

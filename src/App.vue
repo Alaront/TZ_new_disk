@@ -7,6 +7,15 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
+* {
+  font-family: $font-family, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+}
 
+body {
+  min-height: 100vh;
+  background: $dark-color;
+}
 </style>

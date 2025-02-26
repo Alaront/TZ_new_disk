@@ -10,6 +10,8 @@
 
 <style scoped lang="scss">
 .home {
-
+  h2 {
+    color: $dark-color;
+  }
 }
 </style>
