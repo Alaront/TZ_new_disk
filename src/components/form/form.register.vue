@@ -3,6 +3,7 @@
   import {ButtonMain} from "../../uikit/button";
   import { userRegister, userLogin } from "../../api/api.user.ts";
   import {ref} from "vue";
+  import {AxiosError} from "axios";
 
   interface Emit {
     (e: 'goLogin'): void
@@ -81,7 +82,9 @@
       }
 
     } catch (error) {
-      responseError.value = error.response.data.message;
+      if (error instanceof AxiosError && error.response) {
+        responseError.value = error.response.data.message;
+      }
     }
 
     btnDisabled.value = false;

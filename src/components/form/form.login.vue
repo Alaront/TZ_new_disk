@@ -3,7 +3,7 @@
   import {ButtonMain} from "../../uikit/button";
   import {ref} from "vue";
   import {userLogin} from "../../api/api.user.ts";
-  import {useRouter} from "vue-router";
+  import {AxiosError} from "axios";
 
   interface Emit {
     (e: 'goRegister'): void
@@ -11,8 +11,6 @@
   }
 
   const emit = defineEmits<Emit>()
-
-  const router = useRouter();
 
   const email = ref<string>('')
   const password = ref<string>('')
@@ -78,7 +76,9 @@
       }
 
     } catch (error) {
-      responseError.value = error.response.data.message;
+      if (error instanceof AxiosError && error.response) {
+        responseError.value = error.response.data.message;
+      }
     }
 
     btnDisabled.value = false;
