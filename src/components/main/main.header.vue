@@ -14,7 +14,7 @@
   const isLogin = ref<boolean>(false)
   const isShowBtnOut = ref<boolean>(false)
 
-  const isLogInPopup =ref<boolean>(true)
+  const isLogInPopup =ref<boolean>(false)
   const isRegisterPopup =ref<boolean>(false)
 
   const closePopUp = () => {

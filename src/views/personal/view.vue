@@ -1,15 +1,75 @@
 <script setup lang="ts">
+  import { ButtonMain } from "../../uikit/button";
+  import { IconAdd } from "../../uikit/icon";
+  import { NotesItem } from "../../components/notes";
+  import { PopupMain } from "../../components/popup";
+  import { FormNotes } from "../../components/form";
+  import {ref} from "vue";
+
+  const isPopNotes = ref<boolean>(false);
 
 </script>
 
 <template>
-  <div class="home">
-    <h1>Personal</h1>
+  <div class="personal">
+    <div class="personal__wrapper">
+      <notes-item text="А также явные признаки победы институционализации могут быть объединены в целые кластеры себе подобных." title="Заголовок" />
+      <notes-item text="А также явные признаки победы институционализации могут быть объединены в целые кластеры себе подобных." title="Заголовок" />
+      <notes-item text="А также явные признаки победы институционализации могут быть объединены в целые кластеры себе подобных." title="Заголовок" />
+      <notes-item text="А также явные признаки победы институционализации могут быть объединены в целые кластеры себе подобных." title="Заголовок" />
+    </div>
+    <div class="personal__add">
+      <button-main :round="true" @click="isPopNotes = true">
+        <template #icon>
+          <icon-add />
+        </template>
+      </button-main>
+    </div>
   </div>
+  <popup-main v-if="isPopNotes" @close="isPopNotes = false">
+    <form-notes />
+  </popup-main>
 </template>
 
 <style scoped lang="scss">
-.home {
+.personal {
+  flex: 1;
+  position: relative;
 
+  &__add {
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+    box-shadow: 0px 15px 46px -10px rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+  }
+
+  &__wrapper {
+    width: calc(100% - 20px);
+    max-width: 1600px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    @media(min-width: $tablet) {
+      width: calc(100% - 40px);
+      margin: 40px auto;
+    }
+
+    @media(min-width: $desktop) {
+      width: calc(100% - 40px);
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    @media(min-width: $desktop_full) {
+      width: calc(100% - 40px);
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+  }
 }
 </style>

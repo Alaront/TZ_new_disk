@@ -45,6 +45,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 2;
 
   &__wrapper {
     width: calc(100% - 8px);

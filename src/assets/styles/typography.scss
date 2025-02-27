@@ -28,8 +28,16 @@
   @include create-font(24px, 600, 32px);
 }
 
+@mixin h4-mob {
+  @include create-font(20px, 600, 26px);
+}
+
 @mixin text-normal {
   @include create-font(20px, 500, 32px);
+}
+
+@mixin text-normal-mob {
+  @include create-font(16px, 500, 24px);
 }
 
 @mixin text-small {
