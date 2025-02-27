@@ -20,6 +20,9 @@
   <section class="notes-item">
     <div class="notes-item__header">
       <h4>{{title}}</h4>
+      <div class="notes-item__triangle-notes">
+        <img src="/src/assets/img/icon/triangle-notise.svg" alt="main-photo" />
+      </div>
     </div>
     <div class="notes-item__text">
       <p>{{text}}</p>
@@ -70,15 +73,18 @@
       box-sizing: border-box;
     }
 
-    &:after {
-      content: '';
+    .notes-item__triangle-notes {
       width: 40px;
       height: 40px;
-      background: url("src/assets/img/icon/triangle-notise.svg") no-repeat center;
-      background-size: contain;
       position: absolute;
       top: 0;
       right: -40px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
     }
 
     @media(min-width: $tablet) {
