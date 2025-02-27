@@ -2,23 +2,95 @@
   import {InputMain} from "../../uikit/input";
   import {ButtonMain} from "../../uikit/button";
   import {ref} from "vue";
+  import {userLogin} from "../../api/api.user.ts";
+  import {useRouter} from "vue-router";
 
   interface Emit {
     (e: 'goRegister'): void
+    (e: 'goPersonal'): void
   }
 
   const emit = defineEmits<Emit>()
 
+  const router = useRouter();
+
   const email = ref<string>('')
   const password = ref<string>('')
+
+  const btnDisabled = ref<boolean>(false)
+  const emailError = ref<string>("");
+  const passwordError = ref<string>("");
+  const responseError = ref<string>('');
+
+  const validation = (): boolean => {
+
+    let isValid = true;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.value)) {
+      emailError.value = "Некорректный email";
+      isValid = false;
+    } else {
+      emailError.value = "";
+    }
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    if (!passwordRegex.test(password.value) || password.value.length < 8) {
+      passwordError.value =
+          "Пароль должен содержать минимум 8 символов, одну заглавную букву, одну цифру и один специальный символ";
+      isValid = false;
+    } else {
+      passwordError.value = "";
+    }
+
+    console.log(isValid)
+    return isValid;
+  }
+
+  const formSubmit = async (e: Event) => {
+    e.preventDefault()
+    btnDisabled.value = true;
+    responseError.value = '';
+
+    console.log('submit')
+
+    if(!validation()) {
+      btnDisabled.value = false;
+      return
+    }
+
+    // testTest123@mail.com
+    // 132DFsdf#
+
+    const responseData = {
+      password: password.value,
+      email: email.value
+    }
+
+    try {
+      const data = await userLogin(responseData)
+
+      if(data.accessToken) {
+        // токен лучше хранить в сторе и слушать его на появление токена, но я не понял можно ли использовать стейтменеджеры
+        window.localStorage.setItem('token-disk', data.accessToken)
+
+        emit('goPersonal')
+      }
+
+    } catch (error) {
+      responseError.value = error.response.data.message;
+    }
+
+    btnDisabled.value = false;
+  }
 </script>
 
 <template>
   <div class="from-login">
     <h2>Вход в ваш аккаунт</h2>
-    <form>
-      <input-main v-model="email" label="Email" placeholder="Введите Email"/>
-      <input-main :is-password="true" v-model="password" label="Пароль" placeholder="Введите пароль"/>
+    <form @submit="formSubmit">
+      <input-main v-model="email" label="Email" placeholder="Введите Email" :text-error="emailError"/>
+      <input-main :is-password="true" v-model="password" label="Пароль" placeholder="Введите пароль" :password-error="passwordError"/>
       <div class="from-login__btn">
         <button-main text="Войти"/>
         <p>
@@ -27,8 +99,8 @@
         </p>
       </div>
     </form>
-    <div class="from-login__error">
-      Пользователь с таким логином не найден
+    <div v-if="responseError" class="from-login__error">
+      {{responseError}}
     </div>
   </div>
 </template>

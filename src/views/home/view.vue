@@ -81,12 +81,19 @@
     }
 
     @media(min-width: $desktop) {
-      width: 628px;
+      width: auto;
+      max-width: 628px;
       align-self: end;
+
+      img {
+        object-fit: cover;
+        max-height: calc(100vh - 96px);
+      }
     }
 
     @media(min-width: $desktop_full) {
-      width: 867px;
+      max-width: 867px;
+      width: auto;
     }
   }
 }

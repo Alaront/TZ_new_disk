@@ -3,10 +3,16 @@
 
   interface Props {
     title: string,
-    text: string
+    text: string,
+    id: number
+  }
+
+  interface Emit {
+    (e: 'remove-item', id: number): void
   }
 
   defineProps<Props>()
+  const emits = defineEmits<Emit>()
 
 </script>
 
@@ -17,7 +23,7 @@
     </div>
     <div class="notes-item__text">
       <p>{{text}}</p>
-      <div class="notes-item__remove">
+      <div class="notes-item__remove" @click="() => emits('remove-item', id)">
         <icon-close />
         <span>Удалить</span>
       </div>

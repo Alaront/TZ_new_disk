@@ -53,9 +53,10 @@ onUnmounted(() => {
     border-radius: 40px;
     background: $middle-color;
     max-width: 688px;
-    max-height: max-content;
     padding: 42px 16px;
     position: relative;
+    max-height: 100vh;
+    overflow: auto;
 
     @media(min-width: $tablet) {
       max-width: 780px;

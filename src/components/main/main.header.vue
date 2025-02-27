@@ -4,7 +4,9 @@
   import { ButtonMain } from "../../uikit/button";
   import { PopupMain } from "../popup";
   import { FormRegister, FormLogin } from "../form";
-  import {computed, ref} from "vue";
+  import {computed, onMounted, ref} from "vue";
+  import {useRouter} from "vue-router";
+  import {userAuth, userAuthOut} from "../../api/api.user.ts";
 
   const forms = {
     register: FormRegister,
@@ -12,10 +14,13 @@
   }
 
   const isLogin = ref<boolean>(false)
+  const userName = ref<string>('')
   const isShowBtnOut = ref<boolean>(false)
 
   const isLogInPopup =ref<boolean>(false)
   const isRegisterPopup =ref<boolean>(false)
+
+  const router = useRouter();
 
   const closePopUp = () => {
     isLogInPopup.value = false
@@ -32,15 +37,66 @@
     isRegisterPopup.value = true;
   }
 
+  const getUserData = async () => {
+    try {
+      const data = await userAuth();
+
+      userName.value = data.email;
+
+      isLogin.value = true
+      isLogInPopup.value = false
+      isRegisterPopup.value = false
+
+    } catch (e) {
+      router.push('/')
+      window.localStorage.removeItem('token-disk')
+      console.error(e)
+    }
+  }
+
+  const goPersonal = async () => {
+    if(window.localStorage.getItem('token-disk')) {
+
+      await getUserData()
+
+      router.push('/personal')
+    }
+
+    router.push('/')
+  }
+
+  const userOut = async () => {
+    try {
+      const data = await userAuthOut();
+
+      if(data.status === 200) {
+        router.push('/')
+        isLogin.value = false
+        window.localStorage.removeItem('token-disk')
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   const computedForm = computed(() => {
     return forms[isRegisterPopup.value ? 'register' : 'login']
+  })
+
+  onMounted(() => {
+    // все эти доступы и данные об пользователе лучше делегировать через данные в сторе, но я не знаю можно ли его использовать
+    if(window.localStorage.getItem('token-disk')) {
+      getUserData()
+    } else {
+      router.push('/')
+    }
   })
 </script>
 
 <template>
   <header class="header">
     <div class="header__wrapper">
-      <div class="header__logo">
+      <div class="header__logo" @click="router.push('/')">
         <icon-logo />
       </div>
 
@@ -52,12 +108,12 @@
         </button-main>
       </div>
 
-      <div v-else @mouseenter="isShowBtnOut = true" @mouseleave="isShowBtnOut = false" class="header__user">
-        <p>e-mail@mail.mail</p>
+      <div @click="router.push('/personal')" v-else @mouseenter="isShowBtnOut = true" @mouseleave="isShowBtnOut = false" class="header__user">
+        <p>{{ userName }}</p>
         <span><icon-user /></span>
 
-        <div v-if="isShowBtnOut" class="header__user-out">
-          <div class="header__user-out-content">
+        <div v-if="isShowBtnOut" class="header__user-out" @click.stop>
+          <div @click="userOut" class="header__user-out-content">
             Выйти
           </div>
         </div>
@@ -70,6 +126,7 @@
         :is="computedForm"
         @go-login="goLogin"
         @go-register="goRegister"
+        @goPersonal="goPersonal"
     />
   </popup-main>
 </template>
@@ -78,6 +135,8 @@
 .header {
   width: 100%;
   padding: 20px;
+  position: relative;
+  z-index: 1;
 
   &__wrapper {
     max-width: 1600px;
@@ -91,6 +150,7 @@
     width: 154px;
     height: 36px;
     flex-shrink: 0;
+    cursor: pointer;
 
     @media(min-width: $tablet) {
       width: 218px;
@@ -108,6 +168,7 @@
     margin-left: 20px;
     cursor: pointer;
     position: relative;
+
 
     p {
       @include text-small-mob;

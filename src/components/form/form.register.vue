@@ -1,10 +1,12 @@
 <script setup lang="ts">
   import {InputMain} from "../../uikit/input";
   import {ButtonMain} from "../../uikit/button";
+  import { userRegister, userLogin } from "../../api/api.user.ts";
   import {ref} from "vue";
 
   interface Emit {
     (e: 'goLogin'): void
+    (e: 'goPersonal'): void
   }
 
   const emit = defineEmits<Emit>()
@@ -12,26 +14,97 @@
   const email = ref<string>('')
   const password = ref<string>('')
   const repeatPassword = ref<string>('')
+
+  const emailError = ref<string>("");
+  const passwordError = ref<string>("");
+  const repeatPasswordError = ref<string>("");
+  const responseError = ref<string>('')
+
+  const btnDisabled = ref<boolean>(false);
+
+  const validation = (): boolean => {
+
+    let isValid = true;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.value)) {
+      emailError.value = "Некорректный email";
+      isValid = false;
+    } else {
+      emailError.value = "";
+    }
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    if (!passwordRegex.test(password.value) || password.value.length < 8) {
+      passwordError.value =
+          "Пароль должен содержать минимум 8 символов, одну заглавную букву, одну цифру и один специальный символ";
+      isValid = false;
+    } else {
+      passwordError.value = "";
+    }
+
+    if (password.value !== repeatPassword.value) {
+      repeatPasswordError.value = "Пароли не совпадают";
+      isValid = false;
+    } else {
+      repeatPasswordError.value = "";
+    }
+
+    return isValid;
+  }
+
+  const formSubmit = async (e: Event) => {
+    e.preventDefault()
+    btnDisabled.value = true;
+    responseError.value = '';
+
+    if(!validation()) {
+      btnDisabled.value = false;
+      return
+    }
+
+    const responseData = {
+      password: password.value,
+      confirm_password: repeatPassword.value,
+      email: email.value
+    }
+
+    try {
+      await userRegister(responseData)
+      const data = await userLogin(responseData)
+
+      if(data.accessToken) {
+        // токен лучше хранить в сторе и слушать его на появление токена, но я не понял можно ли использовать стейтменеджеры
+        window.localStorage.setItem('token-disk', data.accessToken)
+
+        emit('goPersonal')
+      }
+
+    } catch (error) {
+      responseError.value = error.response.data.message;
+    }
+
+    btnDisabled.value = false;
+  }
 </script>
 
 <template>
   <div class="from-register">
     <h2>Регистрация</h2>
-    <form>
-      <input-main v-model="email" label="Email" placeholder="Введите Email"/>
-      <input-main :is-password="true" v-model="password" label="Пароль" placeholder="Введите пароль"/>
-      <input-main :is-password="true" v-model="repeatPassword" label="Пароль ещё раз" placeholder="Введите пароль" text-error="Сообщение об ошибке"/>
+    <form @submit="formSubmit">
+      <input-main v-model="email" label="Email" placeholder="Введите Email" :text-error="emailError"/>
+      <input-main :is-password="true" v-model="password" label="Пароль" placeholder="Введите пароль" :text-error="passwordError"/>
+      <input-main :is-password="true" v-model="repeatPassword" label="Пароль ещё раз" placeholder="Введите пароль" :text-error="repeatPasswordError"/>
+
       <div class="from-register__btn">
-        <button-main text="Зарегистрироваться"/>
+        <button-main text="Зарегистрироваться" :disabled="btnDisabled"/>
         <p>
           У вас есть аккаунт?
           <span @click="emit('goLogin')">Войдите</span>
         </p>
       </div>
     </form>
-    <div class="from-register__error">
-      Пользователь с таким логином не найден
-    </div>
+    <div v-if="responseError" class="from-register__error"> {{responseError}} </div>
   </div>
 </template>
 

@@ -4,19 +4,40 @@
   import { NotesItem } from "../../components/notes";
   import { PopupMain } from "../../components/popup";
   import { FormNotes } from "../../components/form";
-  import {ref} from "vue";
+  import {onMounted, ref} from "vue";
+  import {dellNotes, getNotesUser} from "../../api/api.notes.ts";
+  import type { FetchNotesResponse } from "../../types/fetch.ts";
 
   const isPopNotes = ref<boolean>(false);
+
+  const notesList = ref<FetchNotesResponse[]>([])
+
+  const getNotes = async () => {
+    isPopNotes.value = false
+
+    try {
+      notesList.value = await getNotesUser();
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const removeItem = async (id: number) => {
+    console.log('dd')
+    await dellNotes(id)
+    getNotes()
+  }
+
+  onMounted(() => {
+    getNotes()
+  })
 
 </script>
 
 <template>
   <div class="personal">
     <div class="personal__wrapper">
-      <notes-item text="А также явные признаки победы институционализации могут быть объединены в целые кластеры себе подобных." title="Заголовок" />
-      <notes-item text="А также явные признаки победы институционализации могут быть объединены в целые кластеры себе подобных." title="Заголовок" />
-      <notes-item text="А также явные признаки победы институционализации могут быть объединены в целые кластеры себе подобных." title="Заголовок" />
-      <notes-item text="А также явные признаки победы институционализации могут быть объединены в целые кластеры себе подобных." title="Заголовок" />
+      <notes-item v-for="item in notesList" :key="item.id" :text="item.content" :title="item.title" :id="item.id" @removeItem="removeItem"/>
     </div>
     <div class="personal__add">
       <button-main :round="true" @click="isPopNotes = true">
@@ -27,7 +48,7 @@
     </div>
   </div>
   <popup-main v-if="isPopNotes" @close="isPopNotes = false">
-    <form-notes />
+    <form-notes @closeSend="getNotes" />
   </popup-main>
 </template>
 

@@ -2,21 +2,37 @@
 import {InputMain, TextareaMain} from "../../uikit/input";
 import {ButtonMain} from "../../uikit/button";
 import {ref} from "vue";
+import {sendNotesUser} from "../../api/api.notes.ts";
+import type {FetchNotes} from "../../types/fetch.ts";
 
 interface Emit {
-  (e: 'goRegister'): void
+  (e: 'close-send'): void
 }
 
 const emit = defineEmits<Emit>()
 
 const title = ref<string>('')
 const text = ref<string>('')
+
+const pushNotes = async (e: Event) => {
+  e.preventDefault()
+
+  const responseData: FetchNotes = {
+    title: title.value,
+    content: text.value
+  }
+
+  const data = await sendNotesUser(responseData);
+  emit('close-send')
+  console.log(data)
+}
+
 </script>
 
 <template>
   <div class="from-notes">
     <h2>Добавление заметки</h2>
-    <form>
+    <form @submit="pushNotes">
       <input-main :max-size="100" v-model="title" label="Название заметки" placeholder="Введите название"/>
       <textarea-main :max-size="500" v-model="text" label="Текст заметки" placeholder="Введите текст"/>
       <div class="from-notes__btn">
