@@ -1,5 +1,8 @@
 <script setup lang="ts">
-  interface Props {
+import {onMounted, ref} from "vue";
+import {IconPassword, IconOnPassword} from "../icon";
+
+interface Props {
     label?: string,
     placeholder: string,
     textError?: string,
@@ -8,6 +11,8 @@
   }
 
   const text = defineModel<string>({ required: true })
+
+  const passwordComponents = ref<boolean>(false)
 
   const props = defineProps<Props>()
 
@@ -19,13 +24,24 @@
     }
   };
 
+  onMounted(() => {
+    if(props.isPassword) {
+      passwordComponents.value = true;
+    }
+  })
+
 </script>
 
 <template>
   <label class="input-main">
     <span v-if="label">{{label}}</span>
 
-    <input type="text" v-model="text" :placeholder="placeholder" @input="handleInput"/>
+    <input :type="passwordComponents ? 'password' : 'text'" v-model.trim="text" :placeholder="placeholder" @input="handleInput"/>
+
+    <div class="input-main__password" v-if="isPassword" @click="passwordComponents = !passwordComponents">
+      <icon-password v-if="passwordComponents" />
+      <icon-on-password v-else />
+    </div>
 
     <p v-if="maxSize" class="input-main__max-size">{{text.length}} / {{maxSize}}</p>
 
@@ -68,6 +84,12 @@
     text-align: right;
     margin-top: 8px;
     padding: 0 24px 0 0;
+  }
+
+  &__password {
+    position: absolute;
+    top: 62px;
+    right: 30px;
   }
 
   &__error {
