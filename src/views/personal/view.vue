@@ -40,7 +40,7 @@
       <notes-item v-for="item in notesList" :key="item.id" :text="item.content" :title="item.title" :id="item.id" @removeItem="removeItem"/>
     </div>
     <div class="personal__add">
-      <button-main :round="true" @click="isPopNotes = true">
+      <button-main :round="true" @click="isPopNotes = true" aria-label="Добавить">
         <template #icon>
           <icon-add />
         </template>

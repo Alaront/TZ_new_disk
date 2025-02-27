@@ -36,7 +36,7 @@ const pushNotes = async (e: Event) => {
       <input-main :max-size="100" v-model="title" label="Название заметки" placeholder="Введите название"/>
       <textarea-main :max-size="500" v-model="text" label="Текст заметки" placeholder="Введите текст"/>
       <div class="from-notes__btn">
-        <button-main text="Добавить"/>
+        <button-main title="Отправить" text="Добавить" aria-label="Добавить"/>
       </div>
     </form>
   </div>

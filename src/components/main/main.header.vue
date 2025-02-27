@@ -101,7 +101,7 @@
       </div>
 
       <div v-if="!isLogin" class="header__btn" @click="isLogInPopup = true">
-        <button-main text="Вход" >
+        <button-main text="Вход" aria-label="Вход" >
           <template #icon>
             <icon-login/>
           </template>

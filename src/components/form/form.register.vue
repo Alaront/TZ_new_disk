@@ -97,7 +97,7 @@
       <input-main :is-password="true" v-model="repeatPassword" label="Пароль ещё раз" placeholder="Введите пароль" :text-error="repeatPasswordError"/>
 
       <div class="from-register__btn">
-        <button-main text="Зарегистрироваться" :disabled="btnDisabled"/>
+        <button-main title="Отправить" aria-label="Зарегистрироваться" text="Зарегистрироваться" :disabled="btnDisabled"/>
         <p>
           У вас есть аккаунт?
           <span @click="emit('goLogin')">Войдите</span>

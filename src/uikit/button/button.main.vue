@@ -3,6 +3,8 @@
     text?: string
     disabled?: boolean
     round?: boolean
+    ariaLabel?: string
+    title?: string
   }
 
   interface Emits {
@@ -15,7 +17,7 @@
 </script>
 
 <template>
-  <button class="button" :class="{'button--disabled': disabled, 'button--round': round}" @click="emit('click')" :disabled="disabled">
+  <button :title="title" :aria-label="ariaLabel" class="button" :class="{'button--disabled': disabled, 'button--round': round}" @click="emit('click')" :disabled="disabled">
     <span class="button__icon" v-if="$slots['icon']">
       <slot name="icon" />
     </span>

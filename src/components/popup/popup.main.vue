@@ -24,7 +24,7 @@ onUnmounted(() => {
       <slot />
 
       <div class="popup-main__close" @click="emit('close')">
-        <button-main :round="true">
+        <button-main :round="true" aria-label="Закрыть">
           <template #icon>
             <icon-close />
           </template>

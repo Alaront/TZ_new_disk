@@ -92,7 +92,7 @@
       <input-main v-model="email" label="Email" placeholder="Введите Email" :text-error="emailError"/>
       <input-main :is-password="true" v-model="password" label="Пароль" placeholder="Введите пароль" :password-error="passwordError"/>
       <div class="from-login__btn">
-        <button-main text="Войти"/>
+        <button-main title="Отправить" text="Войти" aria-label="Войти"/>
         <p>
           У вас нет аккаунта?
           <span @click="emit('goRegister')">Зарегистрируйтесь</span>
