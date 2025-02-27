@@ -19,6 +19,10 @@ import {MainHeader} from "./components/main";
 body {
   min-height: 100vh;
   background: $dark-color;
+
+  &.limited {
+    overflow: hidden;
+  }
 }
 
 .layout {

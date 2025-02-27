@@ -2,6 +2,7 @@
   interface Props {
     text?: string
     disabled?: boolean
+    round?: boolean
   }
 
   interface Emits {
@@ -14,7 +15,7 @@
 </script>
 
 <template>
-  <button class="button" :class="{'button--disabled': disabled}" @click="emit('click')" :disabled="disabled">
+  <button class="button" :class="{'button--disabled': disabled, 'button--round': round}" @click="emit('click')" :disabled="disabled">
     <span class="button__icon" v-if="$slots['icon']">
       <slot name="icon" />
     </span>
@@ -42,6 +43,11 @@
   &__icon {
     width: 32px;
     height: 32px;
+
+    &::v-deep svg {
+      width: 100%;
+      height: 100%;
+    }
   }
 
   &:hover {
@@ -62,6 +68,18 @@
 
     &:active {
       background: $gray-color;
+    }
+  }
+
+  &--round {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    padding: 0;
+
+    .button__icon {
+      width: 16px;
+      height: 16px;
     }
   }
 }

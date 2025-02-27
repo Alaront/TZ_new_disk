@@ -12,6 +12,10 @@
   @include create-font(48px, 600, 72px);
 }
 
+@mixin h2-mob {
+  @include create-font(32px, 600, 36px);
+}
+
 @mixin h3 {
   @include create-font(32px, 400, 48px);
 }

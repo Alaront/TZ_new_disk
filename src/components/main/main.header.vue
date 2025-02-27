@@ -1,12 +1,40 @@
 <script setup lang="ts">
   import { IconLogo } from "../../assets/img/logo";
-  import {IconLogin , IconUser} from "../../uikit/icon";
+  import { IconLogin , IconUser } from "../../uikit/icon";
   import { ButtonMain } from "../../uikit/button";
-  import {ref} from "vue";
+  import { PopupMain } from "../popup";
+  import { FormRegister, FormLogin } from "../form";
+  import {computed, ref} from "vue";
+
+  const forms = {
+    register: FormRegister,
+    login: FormLogin,
+  }
 
   const isLogin = ref<boolean>(false)
   const isShowBtnOut = ref<boolean>(false)
 
+  const isLogInPopup =ref<boolean>(true)
+  const isRegisterPopup =ref<boolean>(false)
+
+  const closePopUp = () => {
+    isLogInPopup.value = false
+    isRegisterPopup.value = false
+  }
+
+  const goLogin = () => {
+    isRegisterPopup.value = false;
+    isLogInPopup.value = true;
+  }
+
+  const goRegister = () => {
+    isLogInPopup.value = false;
+    isRegisterPopup.value = true;
+  }
+
+  const computedForm = computed(() => {
+    return forms[isRegisterPopup.value ? 'register' : 'login']
+  })
 </script>
 
 <template>
@@ -16,7 +44,7 @@
         <icon-logo />
       </div>
 
-      <div v-if="!isLogin" class="header__btn">
+      <div v-if="!isLogin" class="header__btn" @click="isLogInPopup = true">
         <button-main text="Вход" >
           <template #icon>
             <icon-login/>
@@ -36,6 +64,14 @@
       </div>
     </div>
   </header>
+
+  <popup-main v-if="isLogInPopup || isRegisterPopup" @close="closePopUp">
+    <component
+        :is="computedForm"
+        @go-login="goLogin"
+        @go-register="goRegister"
+    />
+  </popup-main>
 </template>
 
 <style scoped lang="scss">
