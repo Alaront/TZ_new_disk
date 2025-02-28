@@ -55,11 +55,13 @@
   }
 
   const goPersonal = async () => {
+    console.log('go personal', window.localStorage.getItem('token-disk'))
     if(window.localStorage.getItem('token-disk')) {
 
       await getUserData()
 
       router.push('/personal')
+      return
     }
 
     router.push('/')
